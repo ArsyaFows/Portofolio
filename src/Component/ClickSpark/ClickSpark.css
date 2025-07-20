@@ -1,0 +1,6 @@
+.click-spark {
+    position: fixed;
+    z-index: 9999; /* pastiin ini lebih tinggi dari elemen lain */
+    pointer-events: none; /* biar gak ganggu klik di bawahnya */
+  }
+  

@@ -41,7 +41,7 @@ function DockItem({
 
   const targetSize = useTransform(
     mouseDistance,
-    [-180, 0, 180],
+    [-100, 0, 100],
     [55, 63, 55] 
   );
   const size = useSpring(targetSize, spring);
@@ -63,9 +63,7 @@ function DockItem({
       role="button"
       aria-haspopup="true"
     >
-      {Children.map(children, (child) =>
-        cloneElement(child, { isHovered })
-      )}
+      {Children.map(children, (child) => cloneElement(child, { isHovered }))}
     </motion.div>
   );
 }
@@ -85,9 +83,9 @@ function DockLabel({ children, className = "", ...rest }) {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: -10 }}
+          exit={{ opacity: 0, y: 0 }}
           transition={{ duration: 0.2 }}
           className={`dock-label ${className}`}
           role="tooltip"
@@ -121,8 +119,7 @@ export default function Dock({
     () => Math.max(dockHeight, magnification + magnification / 2 + 4),
     [magnification, dockHeight]
   );
-  const heightRow = useTransform(isHovered, [0,1], [panelHeight, maxHeight]);
-  const height = panelHeight; // fix height
+  const height = panelHeight;
 
   return (
     <motion.div
@@ -139,87 +136,99 @@ export default function Dock({
           mouseX.set(Infinity);
         }}
         className={`dock-panel ${className}`}
-        style={{ height: panelHeight, position: "relative" }}
+        style={{
+          height: panelHeight,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "70rem",
+          padding: "0 1rem",
+          borderRadius: "1.7rem",
+          backgroundColor: "#4500e5",
+          position: "absolute",
+          bottom: "0.5rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
         role="toolbar"
         aria-label="Application dock"
       >
-{/* Kiri */}
-<span
-  className="dock-name"
+        {/* Kiri - Arsya Logo */}
+        <span
+  className="dock-side-left"
   style={{
-    position: "absolute",
-    left: "1rem",
-    top: "50%",
-    transform: "translateY(-50%)",
     display: "flex",
     alignItems: "center",
     gap: "0.5rem",
   }}
 >
-  <img
-    src="/Images/ARSYA_LOGO.png"
-    alt="Arsya Logo"
-    style={{
-      width: "38px",
-      height: "38px",
-      borderRadius: "50%",
-      backgroundColor: "#001f3f",
-      padding: "2.5px",
-      marginRight: "12px",
-      marginLeft: "-10px",
-      objectFit: "cover",
-    }}
-  />
-  Arsya
-</span>
 
+          <img
+            src="/Images/Logo/ARSYA_LOGO.png"
+            alt="Arsya Logo"
+            style={{
+              width: "38px",
+              height: "38px",
+              borderRadius: "50%",
+              backgroundColor: "#001f3f",
+              padding: "2.5px",
+              objectFit: "cover",
+            }}
+          />
+          <span className="dock-name">Arsya</span>
+        </span>
 
-        {/* Menu item wrapper di tengah */}
-        <div style={{ display: "flex", gap: "1rem" }}>
-          {items.map((item, index) => (
-            <DockItem
-              key={index}
-              onClick={item.onClick}
-              className={item.className}
-              mouseX={mouseX}
-              spring={spring}
-              distance={distance}
-              magnification={magnification}
-              baseItemSize={baseItemSize}
-            >
-              <DockIcon>{item.icon}</DockIcon>
-              <DockLabel>{item.label}</DockLabel>
-            </DockItem>
-          ))}
-        </div>
-
-{/* Kanan */}
-<span
-  className="dock-name"
+        {/* Tengah - Menu Items */}
+        <div
+  className="dock-center-wrapper"
   style={{
     position: "absolute",
-    right: "1rem",
-    top: "50%",
-    transform: "translateY(-50%)",
+    left: "50%",
+    transform: "translateX(-50%)",
+    display: "flex",
+    gap: "1rem",
+    alignItems: "flex-end",
+    zIndex: 1, // biar tetap muncul di atas
   }}
 >
-  <img
-    src="/Images/Logo/Logo_Linkedin.png"
-    alt="LinkedIn Logo"
-    style={{
-      width: "40px",
-      height: "40px",
-      borderRadius: "50%",
-      backgroundColor: "#0077B5",
-      padding: "2.5px",
-      marginRight: "-10px",
-      marginLeft: "10px",
-      objectFit: "cover",
-      marginTop: "5px",
-    }}
-  />
-</span>
+  {items.map((item, index) => (
+    <DockItem
+      key={index}
+      onClick={item.onClick}
+      className={item.className}
+      mouseX={mouseX}
+      spring={spring}
+      distance={distance}
+      magnification={magnification}
+      baseItemSize={baseItemSize}
+    >
+      <DockIcon>{item.icon}</DockIcon>
+      <DockLabel>{item.label}</DockLabel>
+    </DockItem>
+  ))}
+</div>
 
+        {/* Kanan - LinkedIn Logo */}
+        <span
+          className="dock-side-right"
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src="/Images/Logo/Logo_Linkedin.png"
+            alt="LinkedIn Logo"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              backgroundColor: "#0077B5",
+              padding: "2.5px",
+              objectFit: "cover",
+            }}
+          />
+        </span>
       </motion.div>
     </motion.div>
   );

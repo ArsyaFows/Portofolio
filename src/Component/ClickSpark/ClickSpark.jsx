@@ -151,6 +151,7 @@ const ClickSpark = ({
       <canvas
         ref={canvasRef}
         style={{
+          position: 'fixed', // Fullscreen coverage
           width: "100%",
           height: "100%",
           display: "block",
@@ -158,7 +159,8 @@ const ClickSpark = ({
           position: "absolute",
           top: 0,
           left: 0,
-          pointerEvents: "none"
+          pointerEvents: "none",
+          zIndex: 9999, // Selalu di atas
         }}
       />
       {children}
